@@ -9,4 +9,6 @@ public interface UserService {
 	public HashMap<String, Object> selectUserInfo(HashMap<String, Object> paramMap);
 
 	public HashMap<String, Object> selectLoginuserInfo(HashMap<String, Object> paramMap);
+
+	public int selectUserCertification(HashMap<String, Object> paramMap);
 }

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/egovframework/style.css" />  
     <script type="text/javascript">
 	$(document).ready(function(){
-		$("#btn_login").on('click', function(){
+		$("#submit-btn").on('click', function(){
 			fn_login();
 		});
 	});
@@ -60,12 +60,12 @@
           </h1>
        
             <div class="animate-input">
-              <input id="userid" type="text" >
+              <input id="id"  name="id" type="text" >
               <span>전화번호 사용자 이름 또는 이메일</span>
             </div>
 
             <div class="animate-input userpw">
-              <input id="userpw" type="password">
+              <input id="pwd" name="pwd" type="password">
               <span>비밀번호</span>
               <button id="pw-visible" type="button">비밀번호 표시</button>
             </div>
@@ -87,10 +87,10 @@
             </a>
           </div>
 
-          <a class="forgot-pw join" href="javascript:fn_findPwView();">비밀번호를 잊으셨나요?</a>
+          <a class="forgot-pw" href="javascript:fn_findPwView();">비밀번호를 잊으셨나요?</a>
         </div>
 
-        <div class="box join-box join">
+        <div class="box join-box">
           <p>
             계정이 없으신가요?
             <span><a href="javascript:fn_createAccount();">가입하기</a></span>

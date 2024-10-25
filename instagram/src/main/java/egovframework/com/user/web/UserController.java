@@ -63,8 +63,15 @@ public class UserController {
 	@RequestMapping("/insta/insertUser.do")
 	public ModelAndView insertUser(@RequestParam HashMap<String, Object> paramMap) throws Exception{
 		ModelAndView mv = new ModelAndView();
-		String pwd = paramMap.get("userPwd").toString();
-		paramMap.replace("userPwd", sha256.encrypt(pwd));
+		/*
+		 * if (paramMap.get("userId") == null || paramMap.get("userPw") == null ||
+		 * paramMap.get("email") == null || paramMap.get("userName") == null) {
+		 * mv.addObject("resultChk", -1); // 실패 코드 mv.setViewName("jsonView"); return
+		 * mv; }
+		 */
+		System.out.println(1);
+		String pwd = paramMap.get("userPw").toString();
+		paramMap.replace("userPw", sha256.encrypt(pwd));
 		String userEmail = paramMap.get("email").toString();
 		paramMap.put("userEmail", userEmail);
 		
@@ -77,7 +84,7 @@ public class UserController {
 		
 	}
 	
-	@RequestMapping("/user/loginuserAction.d")
+	@RequestMapping("/user/loginuserAction.do")
 	public ModelAndView loginuserAction(HttpSession session, @RequestParam HashMap<String, Object> paramMap) {
 	ModelAndView mv = new ModelAndView();
 	String pwd = paramMap.get("pwd").toString();
@@ -102,6 +109,20 @@ public class UserController {
 	mv.setViewName("jsonView");
 	
 	return mv;
+	}
+	
+	@RequestMapping("/Usercertification.do")
+	public ModelAndView Usercertification(@RequestParam HashMap<String, Object> paramMap) {
+		ModelAndView mv = new ModelAndView();
+		
+		int userIdx = 0;
+		
+		userIdx = userService.selectUserCertification(paramMap);
+		System.out.println(userIdx);
+		
+		mv.addObject("userIdx", userIdx);
+		mv.setViewName("jsonView");
+		return mv;
 	}
 	
 

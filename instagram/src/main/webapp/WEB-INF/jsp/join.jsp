@@ -7,9 +7,9 @@
     <title>가입하기 • Instagram</title>
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/images/egovframework/assets/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/egovframework/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/egovframework/assets/images/favicon-16x16.png">
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+  <!--  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+ 	 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+ -->    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/522c2b7a73.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/egovframework/reset.css">
     <link rel="stylesheet" href="/css/egovframework/join.css">
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/css/egovframework/common.css">
     <script type="text/javascript">
 	 $(document).ready(function(){
-            $("#join-btn").on('click', function(e){
+            $("#join-btn").on('click', function(){
                 fn_join();
             }); 
         });
@@ -42,27 +42,31 @@
                 return;
                 
             }else{ // AJAX로 가입 요청
-            var frm = $("#frm").serialize();
-            $.ajax({
-                url: '/insta/insertUser.do', // 실제 회원가입 URL로 수정
-                method: 'POST',
-                data: frm,
-                dataType: 'json',
-                success: function(data, status, xhr) {
-                    if (data.resultChk > 0) {
-                        alert("가입이 완료되었습니다.");
-                        location.href="/login.do";
-                    } else {
-                        alert("가입에 실패했습니다: ");
-                        return;
-                    }
-                },
-                error: function(data, status, err) {
-                    alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
-                }
-            });
-        }
-     }
+	            var frm = $("#frm").serialize();
+            	console.log(frm);
+	            $.ajax({
+	                url: '/insta/insertUser.do', 
+	                method: 'POST',
+	                data: frm,
+	                dataType: 'json',
+	                success: function(data, status, xhr) {
+	                	 console.log(data);
+	                    if (data.resultChk > 0) {
+	                        alert("가입이 완료되었습니다.");
+	                        location.href="/login.do";
+	                    } else {
+	                        alert("가입에 실패했습니다: ");
+	                        return;
+	                    }
+	                },
+	                error: function(data, status, err) {
+	                	console.error("AJAX 오류:", err);
+	                	
+	                    alert("서버 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+	                }
+	            });
+     	   }
+  	   }
         
     </script>
 </head>
@@ -87,17 +91,15 @@
                     <div>또는</div>
                     <div></div>
                 </div>
+                <div class="animate-input">
+                     <label for="email">이메일 주소</label>
+                  	<input class="email" id="email" name="email" type="text" required>
+                </div>
 
-               
-                    <div class="animate-input">
-                        <label for="email">이메일 주소</label>
-                        <input class="email" id="email" name="email" type="text" required>
-                    </div>
-
-					<div class="animate-input">
-					    <label for="userName">성명</label>
-					    <input id="userName" name="userName" type="text" required>
-					</div>
+				<div class="animate-input">
+					<label for="userName">성명</label>
+					<input id="userName" name="userName" type="text" required>
+				</div>
 
 				<div class="animate-input">
                     <label for="userId">사용자 이름</label>
@@ -114,10 +116,8 @@
                         저희 서비스를 이용하는 사람이 회원님의 연락처 정보를 Instagram에 업로드했을 수도 있습니다. 
                         <a href="">더 알아보기</a>
                     </p>
-
-               <button id="join-btn" type="button" class="btn-blue" onclick="fn_join();">가입</button>
-<!--                    <input type="button" value="가입" class="btn-blue" id="join-btn" onclick="fn_join();"> -->
-
+                    
+             		<button id="join-btn" type="button" class="btn-blue">가입</button>
             </div>
 
             <div class="box join-box">
@@ -158,7 +158,7 @@
         </footer>
     </div>
  </form>
-    <script src="/js/script.js"></script>
+    <script src="/js/scriptJoin.js"></script>
 
 </body>
 </html>

@@ -23,6 +23,12 @@ public class UserDAO extends EgovAbstractMapper{
 		// TODO Auto-generated method stub
 		return selectOne("selectLoginuserInfo", paramMap);
 	}
+
+
+	public int selectUserCertification(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return selectOne("selectUserCertification", paramMap);
+	}
 	
 
 }

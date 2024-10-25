@@ -29,6 +29,12 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 		// TODO Auto-generated method stub
 		return userDAO.selectLoginuserInfo(paramMap);
 	}
+
+	@Override
+	public int selectUserCertification(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userDAO.selectUserCertification(paramMap);
+	}
 	
 	
 
