@@ -1,24 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+	crossorigin="anonymous"></script>
     <title>Instagram</title>
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/egovframework/assets/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/egovframework/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/egovframework/assets/images/favicon-16x16.png">
-    <!-- Font Awesome -->
+ <link rel="apple-touch-icon" sizes="180x180" href="/images/egovframework/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/egovframework/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/egovframework/favicon/favicon-16x16.png">
+ <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/522c2b7a73.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/egovframework/reset.css">
     <link rel="stylesheet" href="/css/egovframework/color.css">
-    <link rel="stylesheet" href="/css/egovframework/style.css">
+    <link rel="stylesheet" href="/css/egovframework/main/style.css">
     
     <script type="text/javascript">
     $(document).ready(function(){
-    	
+    /* 	
     	fn_selectfeed(1);
     	
     	$("#btn_search").on('click', function(){
@@ -27,7 +31,7 @@
     	
 		$("#btn-blue").on('click', function(){
 			fn_insertfeed();
-		})    	
+		})    	 */
     	
     });
     
@@ -35,29 +39,56 @@
 		포스트 이미지 추가: postImg
 			<input type="file" id="inputFile" style="display:none;"/>
 			
-			$(document).redy(funcion(){
+				$(document).ready(funcion(){
 				$("#postImg").on("click",founcion(){
 					$("inputFile").click();
 				});
 		}); */
-    function fn_insertfeed(){
+		
+/*     function fn_insertfeed(){
 			$("#flag").val("I");
-			var frm = $("#boardFrm");
+			var frm = $("#frm");
 			frm.attr("action", "/feed/registFeed.do");
 			frm.submit();
-		}
+		} */
     
     
+		
+/* 		// fn_selectList() 반복문 안에 더보기 메뉴 버튼 수정
+		postsHtml += '<button class="option-btn" type="button" onclick="javascript:fn_moreOption(\''+data.list[i].feedIdx+'\');">';
+
+		// 더보기 메뉴 함수 생성
+		function fn_moreOption(feedIdx){
+		      $(".more-option").addClass("active");
+		      var moreHtml = '';
+		      
+		      moreHtml += '<ul>';
+		      moreHtml += '<li class="red-txt">삭제</li>';
+		      moreHtml += '<li onclick="javascript:fn_updateFeed(feedIdx);">수정</li>';
+		      moreHtml += '<li>다른 사람에게 좋아요 수 숨기기</li>';
+		      moreHtml += '<li>댓글 기능 해제</li>';
+		      moreHtml += '<li>게시물로 이동</li>';
+		      moreHtml += '<li>공유 대상...</li>';
+		      moreHtml += '<li>링크 복사</li>';
+		      moreHtml += '<li>퍼가기</li>';
+		      moreHtml += '<li class="option-close-btn" onclick="popupClose();">취소</li>';
+		      moreHtml += '</ul>';
+		   
+		      $("#moreOption").html(moreHtml);
+		   }
+		   
+		   function popupClose(){
+		      $(".more-option").removeClass("active");
+		   } */
     
     </script>
 </head>
 <body>
 <div class="wrapper">
-<from id="feedFrm" name="feedFrm" method="post">
   <header class="global-header">
     <div>
       <h1 class="logo">
-        <a href="index.html">
+        <a href="/feed/feeduser.do">
           <img src="/images/egovframework/assets/images/logo-light.png" alt="logo">
         </a>
       </h1>
@@ -97,7 +128,7 @@
         </div>
 
         <div class="post-img">
-          <img src="/images/egovframework/assets/images/멍.jpeg"post-img-01">
+          <img src="/images/egovframework/assets/images/멍.jpeg" alt="post-img-01">
         </div>
 
         <div class="post-icons">
@@ -124,7 +155,7 @@
         <div class="comment-list">
           <div class="comment">
             <div class="comment-detail">
-              <div class="username">dog123</div>
+              <div class="userId">dog123</div>
               <p>멍멍</p>
             </div>
             <div class="commnet-heart">
@@ -134,7 +165,7 @@
 
           <div class="comment">
             <div class="comment-detail">
-              <div class="username">idididid</div>
+              <div class="userId">idididid</div>
               <p>오랑롸올아로아ㅗ알</p>
             </div>
             <div class="commnet-heart">
@@ -154,7 +185,7 @@
       <li class="post-item">
         <div class="profile">
           <div class="profile-img">
-            <img src="/images/egovframework/assets/멍1.jpeg" alt="프로필이미지">
+            <img src="/images/egovframework/assets/images/멍1.jpeg" alt="프로필이미지">
           </div>
 
           <div class="profile-txt">
@@ -168,7 +199,7 @@
         </div>
 
         <div class="post-img">
-          <img src="/images/egovframework/assets/멍1.jpeg" alt="post-img-01">
+          <img src="/images/egovframework/assets/images/멍1.jpeg" alt="post-img-01">
         </div>
 
         <div class="post-icons">
@@ -195,7 +226,7 @@
         <div class="comment-list">
           <div class="comment">
             <div class="comment-detail">
-              <div class="username">idididid</div>
+              <div class="userId">idididid</div>
               <p>오랑롸올아로아ㅗ알</p>
             </div>
             <div class="commnet-heart">
@@ -222,8 +253,8 @@
         </div>
 
         <div>
-          <div class="username">yejin</div>
-          <div class="ko-name">이예진</div>
+          <div class="userId">yejin</div>
+          <div class="userName">이예진</div>
         </div>
       </div>
 
@@ -239,7 +270,7 @@
               <img src="/images/egovframework/assets/images/멍2.jpeg" alt="프로필사진">
             </div>
             <div>
-              <div class="username">zzz_zzz</div>
+              <div class="userId">zzz_zzz</div>
               <p>instagram 신규 가입</p>
             </div>
           </div>
@@ -250,7 +281,7 @@
             </div>
 
             <div>
-              <div class="username">lorem</div>
+              <div class="userId">lorem</div>
               <p>회원님을 위한 추천</p>
             </div>
           </div>
@@ -261,7 +292,7 @@
             </div>
 
             <div>
-              <div class="username">cldieid</div>
+              <div class="userId">cldieid</div>
               <p>회원님을 위한 추천</p>
             </div>
           </div>
@@ -272,7 +303,7 @@
             </div>
 
             <div>
-              <div class="username">abcdefg</div>
+              <div class="userId">abcdefg</div>
               <p>회원님을 위한 추천</p>
             </div>
           </div>
@@ -307,7 +338,7 @@
           <textarea name="content" id="text_field" cols="50" rows="5" placeholder="문구를 입력하세요..."></textarea>
         </p>
 
-        <button class="submit_btn btn-blue" type="button">공유하기</button>
+        <button class="submit_btn btn-blue" type="submit">공유하기</button>
       </form>
     </div>
   </div>
@@ -325,9 +356,9 @@
       <li class="option-close-btn">취소</li>
     </ul>
   </div>
-  </from>
 </div>
 
-<script src="./script.js"></script>
+
+<script src="/js/script.js"></script>
 </body>
 </html>

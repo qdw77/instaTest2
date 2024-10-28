@@ -30,7 +30,7 @@ public class UserController {
 	 * model){ HashMap<String, Object> }
 	 */
 
-	@RequestMapping("/feed.do")
+	@RequestMapping("/feed/feeduser.do")
 	public String feed(HttpSession session, Model model) {
 		HashMap<String, Object> loginInfo = null;
 		loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");

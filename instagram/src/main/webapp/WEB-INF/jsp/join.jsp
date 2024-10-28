@@ -3,16 +3,16 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>가입하기 • Instagram</title>
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/egovframework/assets/images/apple-touch-icon.png">
-  <!--  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
- 	 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
- -->    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/egovframework/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/egovframework/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/egovframework/favicon/favicon-16x16.png">
+   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/522c2b7a73.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/egovframework/reset.css">
-    <link rel="stylesheet" href="/css/egovframework/join.css">
+    <link rel="stylesheet" href="/css/egovframework/join/style.css">
     <link rel="stylesheet" href="/css/egovframework/color.css">
     <link rel="stylesheet" href="/css/egovframework/common.css">
     <script type="text/javascript">

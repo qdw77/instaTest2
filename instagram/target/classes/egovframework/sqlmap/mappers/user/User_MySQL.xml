@@ -24,17 +24,15 @@
 	</insert>
 	
 	<select id="selectLoginuserInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-	
-			select user_idx AS userIdx,
-				user_id AS id,
-				user_name AS name,
-				user_email AS email,
-				use_yn AS useYn
-			from tb_user
-			where user_id = #{id}
-			and user_pw = #{pwd}
-			and use_yn = 'Y'
-			
+	    SELECT user_idx AS userIdx,
+	           user_id AS id,
+	           user_name AS name,
+	           user_email AS email,
+	           use_yn AS useYn
+	    FROM tb_user
+	    WHERE user_id = #{id}
+	      AND user_pw = #{pwd} 
+	      AND use_yn = 'Y'
 	</select>
 	
  	<select id="selectUserInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
