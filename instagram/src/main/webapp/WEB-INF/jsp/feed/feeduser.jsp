@@ -21,65 +21,89 @@
     <link rel="stylesheet" href="/css/egovframework/main/style.css">
     
     <script type="text/javascript">
-    $(document).ready(function(){
-    /* 	
-    	fn_selectfeed(1);
-    	
-    	$("#btn_search").on('click', function(){
-    		fn_selectfeed(1);
-    	});
-    	
-		$("#btn-blue").on('click', function(){
-			fn_insertfeed();
-		})    	 */
-    	
-    });
+    /* 파일 업로드 관련 변수 */
+    var fileCnt = 0;
+    var totalCnt = 20;
+    var fileNum = 0;
+    var content_files = new Array(); /* 실제 업로드 파일 */
+    var deleteFeedFiles = new Array(); /* 삭제 업로드 파일 */
+    /* 파일 업로드 관련 변수 */
     
-    /* 파일선택 태그ID : inputFile
-		포스트 이미지 추가: postImg
-			<input type="file" id="inputFile" style="display:none;"/>
+	    $(document).ready(function(){
+	    	var feedFlag = "${paramInfo.feedFlag}";
+	    	if(feedFlag == 'U'){
+	    		fn_detail("${paramInfo.feedIdx}");
+	    	}
+	    	
+			$('#share-button').on('click', function() {
+			fn_feedinsert();
+		});
 			
-				$(document).ready(funcion(){
-				$("#postImg").on("click",founcion(){
-					$("inputFile").click();
+			$("#fileUpload").on("change", function(e){
+				var files = e.target.files;
+				// 파일 배열 담기
+				var filesArr = Array.prototype.slice.call(files);
+				//파일 개수 확인 및 제한
+				if(fileCnt + filesArr.length > totalCnt){
+					alert("파일은 최대 "+totCnt+"개까지 업로드 할 수 있습니다.");
+					return;
+				}else{
+					fileCnt = fileCnt+ filesArr.length;
+				}
+				
+				// 각각의 파일 배열 담기 및 기타
+				filesArr.forEach(function (f){
+					var reader = new FileReader();
+					reader.onload = function (e){
+						content_files.push(f);
+						$("#text_field").append(
+									'<div id="file'+fileNum+'" style="float:left; width:100%; padding-left:100px;">'
+									+'<font style="font-size:12px">' + f.name + '</font>'
+									+'<a href="javascript:fileDelete(\'file'+fileNum+'\')"> X </a>'
+									+'</div>'
+						);
+						fileNum++;
+					};
+					reader.readAsDataURL(f);
 				});
-		}); */
-		
-/*     function fn_insertfeed(){
-			$("#flag").val("I");
-			var frm = $("#frm");
-			frm.attr("action", "/feed/registFeed.do");
-			frm.submit();
-		} */
+				//초기화한다.
+				$("#fileUpload").val("");
+			});
+			
+	 });
+		   function fn_feedinsert(feedIdx) {
+			   $("#feedIdx").val(feedIdx);
+			   var frm = $("#post_form").serialize();
+			   
+			   for(var x=0; x<content_files.length; x++){
+					//삭제 안한 것만 담아준다.
+					if(!content_files[x].is_delete){
+						frm.append("fileList", content_files[x]); 
+					}
+				}
+			   feedFrm.append("deleteFeed", deleteFeed);
+			   $.ajax({
+			        url: '/feed/saveFeed.do', 
+			        method: 'post', 
+			        data: frm, 
+			        enctype: "multipart/form-data", 
+			        processData: false, 
+			        contentType: false, 
+			        dataType: 'json', 
+			        success: function(data, status, xhr) {
+			            if (data.resultChk > 0) { 
+			                alert("저장되었습니다."); 
+			                location.href = "/feed/feeduser.do";
+			            } else {
+			                alert("저장에 실패하였습니다.");
+			            }
+			        },
+			        error: function(data, status, err) {
+			            console.log(err);
+			        }
+			    });
+			}
     
-    
-		
-/* 		// fn_selectList() 반복문 안에 더보기 메뉴 버튼 수정
-		postsHtml += '<button class="option-btn" type="button" onclick="javascript:fn_moreOption(\''+data.list[i].feedIdx+'\');">';
-
-		// 더보기 메뉴 함수 생성
-		function fn_moreOption(feedIdx){
-		      $(".more-option").addClass("active");
-		      var moreHtml = '';
-		      
-		      moreHtml += '<ul>';
-		      moreHtml += '<li class="red-txt">삭제</li>';
-		      moreHtml += '<li onclick="javascript:fn_updateFeed(feedIdx);">수정</li>';
-		      moreHtml += '<li>다른 사람에게 좋아요 수 숨기기</li>';
-		      moreHtml += '<li>댓글 기능 해제</li>';
-		      moreHtml += '<li>게시물로 이동</li>';
-		      moreHtml += '<li>공유 대상...</li>';
-		      moreHtml += '<li>링크 복사</li>';
-		      moreHtml += '<li>퍼가기</li>';
-		      moreHtml += '<li class="option-close-btn" onclick="popupClose();">취소</li>';
-		      moreHtml += '</ul>';
-		   
-		      $("#moreOption").html(moreHtml);
-		   }
-		   
-		   function popupClose(){
-		      $(".more-option").removeClass("active");
-		   } */
     
     </script>
 </head>
@@ -318,7 +342,7 @@
     </button>
 
     <div class="post-upload">
-      <form class="post_form" action="" >
+      <form  id="post_form" class="post_form" action="" >
         <p>새 게시물 만들기</p>
 
         <div class="post-img-preview">
@@ -338,7 +362,7 @@
           <textarea name="content" id="text_field" cols="50" rows="5" placeholder="문구를 입력하세요..."></textarea>
         </p>
 
-        <button class="submit_btn btn-blue" type="submit">공유하기</button>
+        <button class="submit_btn btn-blue" id="share-button" type="button">공유하기</button>
       </form>
     </div>
   </div>

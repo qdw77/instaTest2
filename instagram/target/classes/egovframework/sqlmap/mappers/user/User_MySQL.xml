@@ -54,6 +54,13 @@
 		AND user_email = #{userEmail}
 	</select>
 	
+	<insert id="insertFeed" parameterType="java.util.HashMap">
+	
+	
+	
+	
+	
+	</insert>
 	
 	
 	

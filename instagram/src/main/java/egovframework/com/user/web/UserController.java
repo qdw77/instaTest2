@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -125,6 +126,24 @@ public class UserController {
 		return mv;
 	}
 	
+
+	
+	@RequestMapping("/feed/saveFeed.do")
+	public ModelAndView saveFeed(@RequestParam HashMap<String, Object> paramMap, @RequestParam(name="FeedList") List<MultipartFile> multipartFile, HttpSession session) {
+		ModelAndView mv = new ModelAndView();
+		int resultChk = 0;
+		
+		HashMap<String, Object> sessionInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+		paramMap.put("userId", sessionInfo.get("id").toString());
+		
+		resultChk = userService.saveFeed(paramMap, multipartFile);
+		mv.addObject("resultChk", resultChk);
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+
 
 	
 }
