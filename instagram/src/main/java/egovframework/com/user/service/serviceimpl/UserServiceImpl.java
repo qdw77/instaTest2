@@ -60,9 +60,14 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 		paramMap.put("feedIdx", feedIdx);
 		int chk = 0;
 		String filePath = "/instagram/insta/";
-		String deleteFeedFiles = (String)paramMap.get("deleteFiles");
-		if(deleteFeedFiles.length() >0) { userDAO.deleteFeedFileInfo(paramMap);
+		String deleteFiles = "";
+		if(paramMap.get("deleteFeed") != null) {
+			deleteFiles = (String)paramMap.get("deleteFeed");
+			if(deleteFiles.length() >0) { 
+				userDAO.deleteFeedFileInfo(paramMap);
+			}
 		}
+		
 		if(multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
 			int index = 0;
 			for(MultipartFile file : multipartFile) {
@@ -100,6 +105,45 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 		
 		return resultChk;
 	}
+
+	
+	public List<HashMap<String, Object>> selectUserFeedList(HashMap<String, Object> paramMap) {
+	     List<HashMap<String, Object>> list = userDAO.selectUserList(paramMap);
+
+	      for (int i = 0; i < list.size(); i++) {
+	         HashMap<String, Object> feedMap = list.get(i);
+	         int feedIdx = Integer.parseInt(feedMap.get("feedIdx").toString());
+
+	         List<HashMap<String, Object>> fileList = userDAO.selectFileList(feedIdx); // 파일 리스트 가져오기
+	         // 파일 리스트에 전체 경로 추가  
+	         for (HashMap<String, Object> fileMap : fileList) {
+	            String fileName = fileMap.get("saveFileName") != null ? fileMap.get("saveFileName").toString() : "";
+	            String fullPath = "C:\\ictsaeil\\insta\\" + fileName; 
+	            fileMap.put("fullPath", fullPath); 
+	         }
+	         feedMap.put("fileList", fileList);
+
+	         // 댓글 리스트 가져오기
+	         List<HashMap<String, Object>> commentList = userDAO.selectFeedComment(feedIdx);
+	         feedMap.put("commentList", commentList);
+	      }
+
+	      return list;
+
+	   }
+
+	@Override
+	public List<HashMap<String, Object>> selectUserList(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userDAO.selectUserList(paramMap);
+	}
+
+
+//	@Override
+//	public int selectUserFeedListCnt(HashMap<String, Object> paramMap) {
+//		// TODO Auto-generated method stub
+//		return userDAO.selectUserFeedListCnt(paramMap);
+//	}
 	
 	
 

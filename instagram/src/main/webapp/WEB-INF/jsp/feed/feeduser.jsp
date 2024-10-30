@@ -30,16 +30,21 @@
     /* 파일 업로드 관련 변수 */
     
 	    $(document).ready(function(){
+	    	
+	    	fn_selectList();
+	    	
 	    	var feedFlag = "${paramInfo.feedFlag}";
 	    	if(feedFlag == 'U'){
 	    		fn_detail("${paramInfo.feedIdx}");
 	    	}
 	    	
-			$('#share-button').on('click', function() {
+			$("#share-button").on("click", function() {
 			fn_feedinsert();
 		});
 			
-			$("#fileUpload").on("change", function(e){
+			
+			
+			$("#file-upload-btn").on("change", function(e){
 				var files = e.target.files;
 				// 파일 배열 담기
 				var filesArr = Array.prototype.slice.call(files);
@@ -67,13 +72,27 @@
 					reader.readAsDataURL(f);
 				});
 				//초기화한다.
-				$("#fileUpload").val("");
+				$("#file-upload-btn").val("");
 			});
 			
 	 });
-		   function fn_feedinsert(feedIdx) {
-			   $("#feedIdx").val(feedIdx);
-			   var frm = $("#post_form").serialize();
+    
+    
+    
+	    function fileDelete(fileNum){
+			var no = fileNum.replace(/[^0-9]/g, "");
+			content_files[no].is_delete = true;
+			$("#"+fileNum).remove();
+			fileCnt--;
+		}    
+	    function fn_extFileDelete(fileNum){
+	    	deleteFeedFiles.push(fileNum);
+			$("#extFile_"+fileNum).remove();
+		}
+		
+    
+		   function fn_feedinsert() {
+			   var frm = new FormData($("#post_form")[0]);
 			   
 			   for(var x=0; x<content_files.length; x++){
 					//삭제 안한 것만 담아준다.
@@ -81,9 +100,9 @@
 						frm.append("fileList", content_files[x]); 
 					}
 				}
-			   feedFrm.append("deleteFeed", deleteFeed);
+			   frm.append("deleteFeed", deleteFeedFiles);
 			   $.ajax({
-			        url: '/feed/saveFeed.do', 
+			        url: '/feed/saveFeed.do',
 			        method: 'post', 
 			        data: frm, 
 			        enctype: "multipart/form-data", 
@@ -103,10 +122,107 @@
 			        }
 			    });
 			}
+		   
+		   /* 조회 */
+		   function fn_selectList() {
+		       var frm = $("#searchFrm").serialize();
+		       $.ajax({
+		           url: '/feed/selectAdminFeedList.do',
+		           method: 'post',
+		           data: frm,
+		           dataType: 'json',
+		           success: function(data, status, xhr) {
+					// console.log(data.list);
+		               var boardHtml = '';
+		               if (data.list.length > 0) {
+		                   for (var i = 0; i < data.list.length; i++) {
+		                      
+		                       boardHtml += '<li class="post-item">';
+		                       boardHtml += '<div class="profile">';
+		                       boardHtml += '<div class="profile-img">';
+		                       boardHtml += '<img src="" alt="프로필이미지">';
+		                       boardHtml += '</div>';
+		                       boardHtml += '<div class="profile-txt">';
+		                       boardHtml += '<div class="username">' + data.list[i].userId + '</div>';
+		                       boardHtml += '<div class="location">Sejong, South Korea</div>';
+		                       boardHtml += '</div>';
+		                       boardHtml += '<button class="option-btn" type="button" onclick="javascript:fn_moreOption(\''+data.list[i].feedIdx+'\');">';
+		                       boardHtml += '<i class="fa-solid fa-ellipsis" aria-hidden="true"></i>';
+		                       boardHtml += '</button>';
+		                       boardHtml += '</div>'; // profile
+
+		                       boardHtml += '<div id="carouselExampleControlsNoTouching_'+i+'" class="carousel slide" data-bs-touch="false" data-bs-interval="false" style="height: 600px;">';
+		                       boardHtml += '<div class="carousel-inner">';
+		                       // Assuming images are stored in an array
+		                       for (var j = 0; j < data.list[i].fileList.length; j++) {
+		                          boardHtml += '<div class="carousel-item' + (j === 0 ? ' active' : '') + '">';
+		                          boardHtml += '<img src="/feed/feedImgView.do?saveFileName=' + data.list[i].fileList[j].saveFileName + '" class="d-block w-100 feed-picture" alt="...">';
+		                          boardHtml += '</div>'; 
+		                       } 
+		                       
+		                       boardHtml += '</div>'; // carousel-inner
+
+		                       boardHtml += '<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching_'+i+'" data-bs-slide="prev">';
+		                       boardHtml += '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+		                       boardHtml += '<span class="visually-hidden">Previous</span>';
+		                       boardHtml += '</button>';
+		                       boardHtml += '<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching_'+i+'" data-bs-slide="next">';
+		                       boardHtml += '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+		                       boardHtml += '<span class="visually-hidden">Next</span>';
+		                       boardHtml += '</button>';
+		                       boardHtml += '</div>'; // carousel
+
+		                       boardHtml += '<div class="post-icons">';
+		                       boardHtml += '<div>';
+		                       boardHtml += '<span class="post-heart"><i class="fa-regular fa-heart" aria-hidden="true"></i></span>';
+		                       boardHtml += '<span><i class="fa-regular fa-comment" aria-hidden="true"></i></span>';
+		                       boardHtml += '</div>';
+		                       boardHtml += '<span><i class="fa-regular fa-bookmark" aria-hidden="true"></i></span>';
+		                       boardHtml += '</div>'; // post-icons
+
+		                       boardHtml += '<div class="post-likes">';
+		                       boardHtml += '좋아요 <span id="like-count">' + data.list[i].likeCount + '</span> 개';
+		                       boardHtml += '</div>'; // post-likes
+
+		                       boardHtml += '<div class="post-content">';
+		                       boardHtml += '<p style="font-size:13px;padding:10px;" id="feed-count">' + data.list[i].feedContent + '</p>';
+		                       boardHtml += '</div>';
+
+		                       boardHtml += '<div class="post_hashtag">';
+		                       boardHtml += '<span style="font-size:12px; font-weight: lighter; color: dodgerblue; padding:10px;" id="feed_hashtag">' + data.list[i].feedHashtag + '</span>';
+		                       boardHtml += '</div>';
+
+		                       boardHtml += '<div class="comment-list">';
+
+		                       boardHtml += '</div>'; // comment-list
+
+		                       boardHtml += '<div class="timer">' + data.list[i].timeDiffer+' 전' + '</div>';
+
+		                       boardHtml += '<div class="comment-input">';
+		                       boardHtml += '<input type="text" placeholder="댓글달기..." id="commentContent_'+data.list[i].feedIdx+'">';  // ID 추가
+		                       boardHtml += '<button class="upload_btn" type="button" onclick="javascript:fn_comment('+data.list[i].feedIdx+');">게시</button>'; // 고유 ID 사용 
+//		                     boardHtml += '<button class="upload_btn" id="btn_upload" name="btn_upload" type="button">게시</button>';
+		                       boardHtml += '</div>'; // comment-input
+
+		                       boardHtml += '</li>'; // post-item
+		                   }
+		               } else {
+		                   boardHtml += '<li class="post-item" style="text-align:center;">등록된 글이 없습니다.</li>';
+		               }
+		               $(".post-list").html(boardHtml);//id값일경우 #, class일경우 .)
+		           },
+		           error: function(data, status, err) {
+		               console.log(err);
+		           }
+		       });
+		   }
+		   
+		 
     
     
     </script>
 </head>
+
 <body>
 <div class="wrapper">
   <header class="global-header">
@@ -128,146 +244,21 @@
         </li>
         <li>
           <i class="fa-solid fa-magnifying-glass"></i>
+          <form id="searchFeedFrm" name="searchFeedFrm">
+           <input type="text" id="searchKeyword" name="searchKeyword" class="search-input" placeholder="검색어를 입력하세요" />
+          </form>
         </li>
       </ul>
     </div>
   </header>
 
   <main>
-    <ul class="post-list">
-      <li class="post-item">
-        <div class="profile">
-          <div class="profile-img">
-            <img src="/images/egovframework/assets/images/potato.jpeg" alt="프로필이미지">
-          </div>
-
-          <div class="profile-txt">
-            <div class="username">yejin</div>
-            <div class="location">Sejong, South Korea</div>
-          </div>
-
-          <button class="option-btn" type="button">
-            <i class="fa-solid fa-ellipsis"></i>
-          </button>
-        </div>
-
-        <div class="post-img">
-          <img src="/images/egovframework/assets/images/멍.jpeg" alt="post-img-01">
-        </div>
-
-        <div class="post-icons">
-          <div>
-            <span class="post-heart">
-              <i class="fa-regular fa-heart"></i>
-            </span>
-             <span>
-              <i class="fa-regular fa-comment"></i>
-            </span>
-          </div>
-
-          <span>
-            <i class="fa-regular fa-bookmark"></i>
-          </span>
-        </div>
-
-        <div class="post-likes">
-            좋아요
-            <span id="like-count">2,346</span>
-            개
-        </div>
-
-        <div class="comment-list">
-          <div class="comment">
-            <div class="comment-detail">
-              <div class="userId">dog123</div>
-              <p>멍멍</p>
-            </div>
-            <div class="commnet-heart">
-              <i class="fa-regular fa-heart"></i>
-            </div>
-          </div>
-
-          <div class="comment">
-            <div class="comment-detail">
-              <div class="userId">idididid</div>
-              <p>오랑롸올아로아ㅗ알</p>
-            </div>
-            <div class="commnet-heart">
-              <i class="fa-regular fa-heart"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="timer">2시간 전</div>
-
-        <div class="comment-input">
-          <input type="text" placeholder="댓글달기...">
-          <button class="upload_btn" type="button">게시</button>
-        </div>
-      </li>
-
-      <li class="post-item">
-        <div class="profile">
-          <div class="profile-img">
-            <img src="/images/egovframework/assets/images/멍1.jpeg" alt="프로필이미지">
-          </div>
-
-          <div class="profile-txt">
-            <div class="username">lalala</div>
-            <div class="location">Daejeon</div>
-          </div>
-
-          <button class="option-btn" type="button">
-            <i class="fa-solid fa-ellipsis"></i>
-          </button>
-        </div>
-
-        <div class="post-img">
-          <img src="/images/egovframework/assets/images/멍1.jpeg" alt="post-img-01">
-        </div>
-
-        <div class="post-icons">
-          <div>
-            <span class="post-heart">
-              <i class="fa-regular fa-heart"></i>
-            </span>
-             <span>
-              <i class="fa-regular fa-comment"></i>
-            </span>
-          </div>
-
-          <span>
-            <i class="fa-regular fa-bookmark"></i>
-          </span>
-        </div>
-
-        <div class="post-likes">
-            좋아요
-            <span id="like-count">16</span>
-            개
-        </div>
-
-        <div class="comment-list">
-          <div class="comment">
-            <div class="comment-detail">
-              <div class="userId">idididid</div>
-              <p>오랑롸올아로아ㅗ알</p>
-            </div>
-            <div class="commnet-heart">
-              <i class="fa-regular fa-heart"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="timer">1시간 전</div>
-
-        <div class="comment-input">
-          <input type="text" placeholder="댓글달기...">
-          <button class="upload_btn" type="button">게시</button>
-        </div>
-      </li>
+  <form id="searchFrm" name="searchFrm">
+  <input type="hidden" id="" name="" value="1">
+    <ul class="post-list" id="post-list">
+     	
     </ul>
-
+  </form>
     <div class="recommend lg-only">
       <div class="side-user">
         <div class="profile-img side">
@@ -277,8 +268,8 @@
         </div>
 
         <div>
-          <div class="userId">yejin</div>
-          <div class="userName">이예진</div>
+          <div class="username">yejin</div>
+          <div class="ko-name">이예진</div>
         </div>
       </div>
 
@@ -294,7 +285,7 @@
               <img src="/images/egovframework/assets/images/멍2.jpeg" alt="프로필사진">
             </div>
             <div>
-              <div class="userId">zzz_zzz</div>
+              <div class="username">zzz_zzz</div>
               <p>instagram 신규 가입</p>
             </div>
           </div>
@@ -305,7 +296,7 @@
             </div>
 
             <div>
-              <div class="userId">lorem</div>
+              <div class="username">lorem</div>
               <p>회원님을 위한 추천</p>
             </div>
           </div>
@@ -316,7 +307,7 @@
             </div>
 
             <div>
-              <div class="userId">cldieid</div>
+              <div class="username">cldieid</div>
               <p>회원님을 위한 추천</p>
             </div>
           </div>
@@ -327,7 +318,7 @@
             </div>
 
             <div>
-              <div class="userId">abcdefg</div>
+              <div class="username">abcdefg</div>
               <p>회원님을 위한 추천</p>
             </div>
           </div>
@@ -343,6 +334,8 @@
 
     <div class="post-upload">
       <form  id="post_form" class="post_form" action="" >
+      <input type="hidden" id="feedFlag" name="feedFlag" value="I"/>
+      <input type="hidden" id="feedIdx" name="feedIdx"/>
         <p>새 게시물 만들기</p>
 
         <div class="post-img-preview">
@@ -355,14 +348,14 @@
         </div>
 
         <div class="post-file">
-          <input id="file-upload-btn" type="file"  required="required">
+          <input id="file-upload-btn" name="file-upload-btn" type="file"  required="required" multiple>
         </div>
 
         <p class="post-txt">
-          <textarea name="content" id="text_field" cols="50" rows="5" placeholder="문구를 입력하세요..."></textarea>
+          <textarea name="feedContent" id="feedContent" cols="50" rows="5" placeholder="문구를 입력하세요..."></textarea>
         </p>
 
-        <button class="submit_btn btn-blue" id="share-button" type="button">공유하기</button>
+        <button class="btn-blue" id="share-button" name="share-button" type="button">공유하기</button>
       </form>
     </div>
   </div>

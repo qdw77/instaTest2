@@ -65,6 +65,44 @@ public class UserDAO extends EgovAbstractMapper{
 		// TODO Auto-generated method stub
 		return insert("insertUser", paramMap);
 	}
+
+
+
+
+	public int selectUserFeedListCnt(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return selectOne("selectUserFeedListCnt", paramMap);
+	}
+
+
+	public List<HashMap<String, Object>> selectFeedList(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return selectOne("selectFeedList", paramMap);
+	}
+
+
+	public List<HashMap<String, Object>> selectUserFeedList(int feedIdx) {
+		// TODO Auto-generated method stub
+		return selectOne("selectUserFeedList", feedIdx);
+	}
+
+
+	public List<HashMap<String, Object>> selectUserList(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return selectList("selectUserList", paramMap);
+	}
+
+
+	public List<HashMap<String, Object>> selectFileList(int feedIdx) {
+		// TODO Auto-generated method stub
+		return selectOne("selectAdminFeedList",feedIdx);
+	}
+
+
+	public List<HashMap<String, Object>> selectFeedComment(int feedIdx) {
+		// TODO Auto-generated method stub
+		return selectOne("selectFeedComment",feedIdx);
+	}
 	
 
 }

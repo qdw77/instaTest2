@@ -56,11 +56,124 @@
 	
 	<insert id="insertFeed" parameterType="java.util.HashMap">
 	
-	
-	
+	INSERT tb_feed(
+			feed_hashtag,
+			feed_content,
+			feed_idx,
+			create_id,
+			update_id
+		) VALUES(
+			#{feedHashtag},
+			#{feedContent},
+			(SELECT ifnull(MAX(feed_idx)+1, 1) FROM tb_feed T),
+			#{userId},
+			#{userId}
+		)
 	
 	
 	</insert>
+	
+	<select id="getFileMaxIdx" resultType="int">
+		SELECT ifnull(MAX(feed_idx), 0) FROM tb_feed
+	</select>
+	
+	<select id="getFileIdx" parameterType="java.util.HashMap" resultType="int">
+
+		select feed_idx
+        from tb_feed
+        where feed_idx = #{feedIdx}
+
+	</select>
+	
+	<select id="selectUserList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+         feed_idx AS feedIdx,
+         feed_content AS feedContent,
+         feed_hashtag AS feedHashtag,
+         create_id AS createId,
+         create_date AS createDate,
+         <![CDATA[
+         case when (timestampdiff(minute, create_date, now()) > 60 && timestampdiff(minute, create_date, now()) < 24*60) then concat(timestampdiff(hour, create_date, now()), '시간')
+         when (timestampdiff(minute, create_date, now()) > 24*60) then concat(timestampdiff(day, create_date, now()), '일')
+         else concat(timestampdiff(minute, create_date, now()), '분')  end as timeDiffer,
+         ]]>
+         update_id AS updateId,
+         update_date AS updateDate
+      FROM tb_feed
+      WHERE use_yn = 'Y'
+      <if test="searchKeyword != '' and searchKeyword != null and searchKeyword != 'undefined'">
+         AND feed_hashtag LIKE CONCAT('%', #{searchKeyword}, '%')
+      </if>
+      ORDER BY create_date DESC
+
+
+	</select>
+	
+	
+	<update id="updateFeed" parameterType="java.util.HashMap">
+	
+		UPDATE tb_feed
+		SET feed_hashtag = #{feedHashtag},
+			feed_content = #{feedContent},
+			feed_idx = #{feedIdx},
+			update_id = #{userId}
+		WHERE feed_idx = #{feedIdx}
+
+	</update>
+	
+	
+	
+	<insert id="insertFileFeedAttr" parameterType="java.util.HashMap">
+	
+		insert into tb_file_attr(
+			feed_idx,
+	        original_file_name,
+	        save_file_name,
+	        file_path,
+	        file_size,
+	        file_ext,
+	        create_id,
+	        create_date,
+	        update_id,
+	        update_date
+	     ) values(
+	        #{feedIdx},
+	        #{originalFileName},
+	        #{saveFileName},
+	        #{saveFilePath},
+	        #{fileSize},
+	        #{fileExt},
+	        #{userId},
+	        current_date(),
+	        #{userId},
+	        current_date()
+	     )
+	</insert>
+	
+	 <select id="selectAdminFeedList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+         feed_idx AS feedIdx,
+            feed_content AS feedContent,
+            feed_hashtag AS feedHashtag,
+            create_id AS userId,
+            create_date AS createDate,
+         <![CDATA[
+            case when (timestampdiff(minute, create_date, now()) > 60 && timestampdiff(minute, create_date, now()) < 24*60) 
+            then concat(timestampdiff(hour, create_date, now()), '시간')
+            when (timestampdiff(minute, create_date, now()) > 24*60) 
+            then concat(timestampdiff(day, create_date, now()), '일')
+            else concat(timestampdiff(minute, create_date, now()), '분')  
+            end as timeDiffer,
+         ]]>
+            update_id AS userId,
+            update_date AS updateDate
+      FROM tb_feed
+      WHERE use_yn = 'Y'
+      <if test="searchKeyword != '' and searchKeyword != null and searchKeyword != 'undefined'">
+         AND feed_hashtag LIKE CONCAT('%', #{searchKeyword}, '%')
+      </if>
+      ORDER BY create_date DESC
+   </select>
 	
 	
 	

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import egovframework.com.user.service.UserService;
 import egovframework.com.util.SHA256;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 public class UserController {
@@ -129,7 +130,7 @@ public class UserController {
 
 	
 	@RequestMapping("/feed/saveFeed.do")
-	public ModelAndView saveFeed(@RequestParam HashMap<String, Object> paramMap, @RequestParam(name="FeedList") List<MultipartFile> multipartFile, HttpSession session) {
+	public ModelAndView saveFeed(@RequestParam HashMap<String, Object> paramMap, @RequestParam(name="fileList") List<MultipartFile> multipartFile, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
 		int resultChk = 0;
 		
@@ -140,6 +141,20 @@ public class UserController {
 		mv.addObject("resultChk", resultChk);
 		mv.setViewName("jsonView");
 		
+		return mv;
+	}
+	
+	// 게시물 리스트
+	@RequestMapping("/feed/selectAdminFeedList.do")
+	public ModelAndView selectAdminFeedList(@RequestParam HashMap<String, Object> paramMap) {
+		ModelAndView mv = new ModelAndView();
+		
+		List<HashMap<String, Object>> list = userService.selectUserList(paramMap);
+		
+		
+		mv.addObject("list", list);
+		
+		mv.setViewName("jsonView");
 		return mv;
 	}
 	

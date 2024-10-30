@@ -16,4 +16,8 @@ public interface UserService {
 	public int selectUserCertification(HashMap<String, Object> paramMap);
 
 	public int saveFeed(HashMap<String, Object> paramMap, List<MultipartFile> multipartFile);
+
+//	public List<HashMap<String, Object>> selectUserFeedList(HashMap<String, Object> paramMap);
+
+	public List<HashMap<String, Object>> selectUserList(HashMap<String, Object> paramMap);
 }
