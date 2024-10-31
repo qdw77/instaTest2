@@ -20,6 +20,15 @@
     <link rel="stylesheet" href="/css/egovframework/color.css">
     <link rel="stylesheet" href="/css/egovframework/main/style.css">
     
+    <!-- 부트스트랩 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<!--    구글 머터리얼 아이콘   -->
+<link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+      rel="stylesheet">
+<link rel="stylesheet"
+      href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+    
     <script type="text/javascript">
     /* 파일 업로드 관련 변수 */
     var fileCnt = 0;
@@ -32,6 +41,7 @@
 	    $(document).ready(function(){
 	    	
 	    	fn_selectList();
+	    	fn_imgView();
 	    	
 	    	var feedFlag = "${paramInfo.feedFlag}";
 	    	if(feedFlag == 'U'){
@@ -75,6 +85,11 @@
 				$("#file-upload-btn").val("");
 			});
 			
+			$("#btn_update").on('click', function(){
+				$("#feedFlag").val("U");
+				fn_feedinsert();
+			});
+			
 	 });
     
     
@@ -112,7 +127,7 @@
 			        success: function(data, status, xhr) {
 			            if (data.resultChk > 0) { 
 			                alert("저장되었습니다."); 
-			                location.href = "/feed/feeduser.do";
+			                fn_selectList();
 			            } else {
 			                alert("저장에 실패하였습니다.");
 			            }
@@ -132,7 +147,7 @@
 		           data: frm,
 		           dataType: 'json',
 		           success: function(data, status, xhr) {
-					// console.log(data.list);
+					 console.log(data.list);
 		               var boardHtml = '';
 		               if (data.list.length > 0) {
 		                   for (var i = 0; i < data.list.length; i++) {
@@ -140,10 +155,10 @@
 		                       boardHtml += '<li class="post-item">';
 		                       boardHtml += '<div class="profile">';
 		                       boardHtml += '<div class="profile-img">';
-		                       boardHtml += '<img src="" alt="프로필이미지">';
+		                       boardHtml += '<img src="/images/egovframework/assets/images/potato.jpeg" alt="프로필이미지">';
 		                       boardHtml += '</div>';
 		                       boardHtml += '<div class="profile-txt">';
-		                       boardHtml += '<div class="username">' + data.list[i].userId + '</div>';
+		                       boardHtml += '<div class="username">' + data.list[i].createId + '</div>';
 		                       boardHtml += '<div class="location">Sejong, South Korea</div>';
 		                       boardHtml += '</div>';
 		                       boardHtml += '<button class="option-btn" type="button" onclick="javascript:fn_moreOption(\''+data.list[i].feedIdx+'\');">';
@@ -156,7 +171,8 @@
 		                       // Assuming images are stored in an array
 		                       for (var j = 0; j < data.list[i].fileList.length; j++) {
 		                          boardHtml += '<div class="carousel-item' + (j === 0 ? ' active' : '') + '">';
-		                          boardHtml += '<img src="/feed/feedImgView.do?saveFileName=' + data.list[i].fileList[j].saveFileName + '" class="d-block w-100 feed-picture" alt="...">';
+		                          boardHtml += '<img src="/main/feedImgView.do?saveFileName=' + data.list[i].fileList[j].saveFileName + '" class="d-block w-100 feed-picture" alt="...">';
+		                          boardHtml += '<button class="option-btn" type="button" onclick="javascript:fn_moreOption(\''+data.list[i].feedIdx+'\');">'; 
 		                          boardHtml += '</div>'; 
 		                       } 
 		                       
@@ -201,7 +217,7 @@
 		                       boardHtml += '<div class="comment-input">';
 		                       boardHtml += '<input type="text" placeholder="댓글달기..." id="commentContent_'+data.list[i].feedIdx+'">';  // ID 추가
 		                       boardHtml += '<button class="upload_btn" type="button" onclick="javascript:fn_comment('+data.list[i].feedIdx+');">게시</button>'; // 고유 ID 사용 
-//		                     boardHtml += '<button class="upload_btn" id="btn_upload" name="btn_upload" type="button">게시</button>';
+							   boardHtml += '<button class="upload_btn" id="btn_upload" name="btn_upload" type="button">게시</button>';
 		                       boardHtml += '</div>'; // comment-input
 
 		                       boardHtml += '</li>'; // post-item
@@ -209,13 +225,206 @@
 		               } else {
 		                   boardHtml += '<li class="post-item" style="text-align:center;">등록된 글이 없습니다.</li>';
 		               }
-		               $(".post-list").html(boardHtml);//id값일경우 #, class일경우 .)
+		               $("#post-list").html(boardHtml);//id값일경우 #, class일경우 .)
 		           },
 		           error: function(data, status, err) {
 		               console.log(err);
 		           }
 		       });
 		   }
+		   
+		   // 더보기
+		   function fn_moreOption(feedIdx){
+		 //console.log(feedIdx);
+	      $(".more-option").addClass("active");
+	      var moreHtml = '';
+	      
+	      moreHtml += '<ul>';
+	      moreHtml += '<li onclick="javascript:fn_delete(\''+feedIdx+'\');" class="red-txt">삭제</li>';
+	      moreHtml += '<li onclick="javascript:fn_detail(\''+feedIdx+'\');">수정1</li>';
+	      moreHtml += '<li>다른 사람에게 좋아요 수 숨기기</li>';
+	      moreHtml += '<li>댓글 기능 해제</li>';
+	      moreHtml += '<li>게시물로 이동</li>';
+	      moreHtml += '<li>공유 대상...</li>';
+	      moreHtml += '<li>링크 복사</li>';
+	      moreHtml += '<li>퍼가기</li>';
+	      moreHtml += '<li class="option-close-btn" onclick="fn_popupClose();">취소</li>';
+	      moreHtml += '</ul>';
+	   
+	      // 다른사람이 로그인 하면 메뉴가 다르게 보이게 처리
+	      
+	      $("#moreOption").html(moreHtml);
+	   }
+	   
+	   function fn_popupClose(){
+	      $(".more-option").removeClass("active");
+	   }
+	   
+	// 피드 상세보기
+		// 피드 상세보기
+		function fn_detail(feedIdx){
+			//  팝업 닫기 변수 
+		 var uploadPopup = document.querySelector('.upload-wrapper');
+				 uploadPopup.classList.add('active');
+				
+				 uploadPopup.classList.remove('active');
+			 
+		    $("#statusFlag").val("U");
+		    $("#feedIdx").val(feedIdx);
+		  //var feedIdx3 = $("#feedIdx").val();
+			var formData = new FormData($("#saveFrm")[0]);
+			
+		
+			if ($("#feedFlag").val() === "U") {
+			    $("#share-button").hide();
+			    $("#btn_update").show();
+			    $(".new_upload_tit").hide();
+			    $(".update_upload_tit").show();
+			} else {
+			    $("#share-button").show();
+			    $("#btn_update").hide();
+			    $(".new_upload_tit").show(); //classList / new_upload_tit 
+			    $(".update_upload_tit").hide(); // update_upload_tit
+			}
+			 
+			  console.log(1);
+			fn_popupClose();
+		      $(".upload-wrapper").addClass("active");
+		      $.ajax({
+		         url : '/main/getFeedDetail.do',
+		         method : 'post',
+		         data : {
+		            "feedIdx" : feedIdx
+		         },
+		         dataType : 'json',
+		         success : function(data, status, xhr) {
+		            $("#feedContent").val(data.feedInfo.feedContent);
+		            $("#feedHashtag").val(data.feedInfo.feedHashtag);
+		            var innerHtml = '';
+		            var imgHtml = '';
+		            let canvas = document.getElementById('img-canvas');
+		            let ctx = canvas.getContext('2d');
+		            let img = new Image();
+
+		            img.onload = function() {
+		               canvas.width = 500;
+		               canvas.height = 400;
+		               ctx.drawImage(img, 0, 0, 500, 400);
+		            };
+		            for (var i = 0; i < data.fileList.length; i++) {
+		               img.src = "/main/feedImgView.do?saveFileName=" + data.fileList[i].saveFileName;
+		               // 파일 삭제 버튼 소스 추가
+		               innerHtml += '<div id="file' + i + '" >'
+		                     + '<font style="font-size:12px">'
+		                     + '<a href="javascript:fn_imgView(\''
+		                     + data.fileList[i].saveFileName + '\', \'U\');">'
+		                     + data.fileList[i].originalFileName + '</a></font>'
+		                     + '<a href="javascript:fileDelete(\'file' + i
+		                     + '\', \'' + data.fileList[i].fileIdx
+		                     + '\');">X</a>' + '</div>';
+		            }
+		            $("#text_field").html(innerHtml);
+		            console.log(feedIdx);
+		         },
+		         error : function(data, status, err) {
+		            console.log(err);
+		         }
+		      });
+		   }
+
+			    	
+/* 		// 파일 목록
+		   function fn_filelist(feedIdx){
+		      $.ajax({
+		          url: '/main/getFileList.do',
+		          method: 'post',
+		          data : { "feedIdx" : feedIdx},
+		          dataType : 'json',
+		          success: function (data, status, xhr) {
+		             console.log(data.fileList);
+		            if(data.fileList.length > 0){
+		               for(var i=0; i<data.fileList.length; i++){
+		                  $("#text_field").append(
+		                        '<div id="file'+i+'" style="float:left;">'
+		                        +'<font style="font-size:12px">'
+		                        +'<a href="javascript:fn_imgView(\''+ data.fileList[i].saveFileName+'\', \'U\');">'
+		                        + data.fileList[i].originalFileName 
+		                        +'</a></font>'
+		                        +'<a href="javascript:fileDelete(\'file'+i+'\',\''+data.fileList[i].fileIdx+'\');">X</a>'
+		                        +'</div>'
+		                  );
+		               }
+		               fileNum = data.fileList.length;
+		            }
+		          },
+		          error: function (data, status, err) {
+		             console.log(err);
+		          }
+		      });
+		   } */
+		   
+		   // 피드 초기화
+		   function fn_init(){
+		      // canvas
+		       var cnvs = document.getElementById('img-canvas');
+		       // context
+		       var ctx = cnvs.getContext('2d');
+
+		       // 픽셀 정리
+		       ctx.clearRect(0, 0, cnvs.width, cnvs.height);
+		       // 컨텍스트 리셋
+		       ctx.beginPath();
+		       
+		       $("#feedFlag").val("I");
+		       $("#share-button").show();
+		       $("#btn_update").hide();
+		       $(".new_upload_tit").show();
+		       $(".update_upload_tit").hide();
+		      
+		       $("#uploadFile").val("");
+		       $("#uploadFile").clear;
+		       $("#feedContent").val("");
+		       $("#feedHashtag").val("");
+		       $("#boardFileList").html("");
+		       content_files = new Array();
+		       delete_files = new Array();
+		       fileNum = 0;
+		       fileCnt = 0;
+		   }
+		   
+		// fn_imgView(맨하단 추가)
+		   function fn_imgView(saveFileName, type){
+		   		console.log(saveFileName, type);
+		   		if(type == 'I'){
+		   			var reader = new FileReader();
+		   			var e = content_files[saveFileName];
+		   			var canvas = document.getElementById('img-canvas');
+		   			let ctx = canvas.getContext('2d');
+		   		    reader.onload = function(e) {
+		   		    	var img = new Image();
+		   		    	
+		   			    img.onload = function(){
+		   			      canvas.width = 500;
+		   			      canvas.height = 300;
+		   			      ctx.drawImage(img,0,0,500,300);
+		   			    };
+		   			    img.src = e.target.result;
+		   		    };
+		   		    reader.readAsDataURL(e);
+		   		}else{
+		   			let canvas = document.getElementById('img-canvas');
+		   			let ctx = canvas.getContext('2d');
+		   			let img = new Image();
+		   			
+		   		    img.onload = function(){
+		   		      canvas.width = 500;
+		   		      canvas.height = 400;
+		   		      ctx.drawImage(img,0,0,500,400);
+		   		    };
+		   		    img.src = "/main/feedImgView.do?saveFileName=" + saveFileName;	
+		   		}
+		   		
+		   	}
 		   
 		 
     
@@ -255,16 +464,14 @@
   <main>
   <form id="searchFrm" name="searchFrm">
   <input type="hidden" id="" name="" value="1">
-    <ul class="post-list" id="post-list">
-     	
-    </ul>
+    <ul class="post-list" id="post-list"></ul>
   </form>
     <div class="recommend lg-only">
       <div class="side-user">
         <div class="profile-img side">
-          <a href="">
+          <!-- <a href="">
             <img src="/images/egovframework/assets/images/potato.jpeg" alt="프로필사진">
-          </a>
+          </a> -->
         </div>
 
         <div>
@@ -336,7 +543,8 @@
       <form  id="post_form" class="post_form" action="" >
       <input type="hidden" id="feedFlag" name="feedFlag" value="I"/>
       <input type="hidden" id="feedIdx" name="feedIdx"/>
-        <p>새 게시물 만들기</p>
+        <p class="new_upload_tit">새 게시물 만들기</p>
+        <p class="update_upload_tit" style="display:none;">게시물 수정하기</p>
 
         <div class="post-img-preview">
           <div class="plus_icon">
@@ -349,33 +557,32 @@
 
         <div class="post-file">
           <input id="file-upload-btn" name="file-upload-btn" type="file"  required="required" multiple>
+          <div id="text_field" name="text_field"></div>
         </div>
 
         <p class="post-txt">
-          <textarea name="feedContent" id="feedContent" cols="50" rows="5" placeholder="문구를 입력하세요..."></textarea>
+          <textarea name="feedContent" id="feedContent" cols="50" rows="5" placeholder="문구를 입력하세요..." value="${feedInfo.feedContent}"></textarea>
+           <p class="post-txt">
+                  <textarea rows="1" cols="50" id="feedHashtag" name="feedHashtag" class="text" placeholder="#해시태그" value="${feedInfo.feedHashtag}"></textarea>
+               </p>
         </p>
 
         <button class="btn-blue" id="share-button" name="share-button" type="button">공유하기</button>
+         <button style="display:none;" id="btn_update" name="btn_update" class="submit_btn btn-blue" type="button">수정하기</button>
       </form>
     </div>
   </div>
 
-  <div class="more-option">
-    <ul>
-      <li class="red-txt">삭제</li>
-      <li>수정</li>
-      <li>다른 사람에게 좋아요 수 숨기기</li>
-      <li>댓글 기능 해제</li>
-      <li>게시물로 이동</li>
-      <li>공유 대상...</li>
-      <li>링크 복사</li>
-      <li>퍼가기</li>
-      <li class="option-close-btn">취소</li>
-    </ul>
+  <div class="more-option" id="moreOption">
+    
   </div>
 </div>
 
 
 <script src="/js/script.js"></script>
+<!-- Option 1: Bootstrap Bundle with Popper -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 </body>
 </html>

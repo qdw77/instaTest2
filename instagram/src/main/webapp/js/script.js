@@ -16,20 +16,6 @@ postAddBtn.addEventListener('click', () => {popupOpen(uploadPopup)});
 postCloseBtn.addEventListener('click', () => {popupClose(uploadPopup)});
 
 
-// Option Btn
-let optionPopup = document.querySelector('.more-option');
-let optionBtn = document.querySelectorAll('.option-btn');
-let optionCloseBtn = document.querySelector('.option-close-btn');
-
-optionBtn.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    popupOpen(optionPopup)
-  })
-})
-
-optionCloseBtn.addEventListener('click', () => {popupClose(optionPopup)})
-
-
 // Canvas image
 let fileUploadBtn  = document.getElementById('file-upload-btn');
 let canvas = document.getElementById('img-canvas');

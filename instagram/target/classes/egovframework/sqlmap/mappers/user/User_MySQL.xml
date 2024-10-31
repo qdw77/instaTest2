@@ -56,7 +56,7 @@
 	
 	<insert id="insertFeed" parameterType="java.util.HashMap">
 	
-	INSERT tb_feed(
+	INSERT into tb_feed(
 			feed_hashtag,
 			feed_content,
 			feed_idx,
@@ -175,6 +175,37 @@
       ORDER BY create_date DESC
    </select>
 	
+	<select id="selectFileList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT file_idx AS fileIdx, 
+         feed_idx  AS feedIdx , 
+         original_file_name AS originalFileName,
+         save_file_name AS saveFileName, 
+         file_path AS saveFilePath, 
+         file_size AS fileSize, 
+         file_ext AS fileExt, 
+         create_id AS userId, 
+         DATE_FORMAT(create_date, '%Y-%m-%d %H:%i:%s') AS createDate, 
+         update_id AS userId, 
+         DATE_FORMAT(update_date, '%Y-%m-%d %H:%i:%s') AS updateDate 
+      FROM tb_file_attr 
+       WHERE feed_idx = #{feedIdx} 
+       AND use_yn = 'Y' 
+   </select>
 	
+	
+	<select id="selectFeedComment" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	
+	select feed_idx AS feedIdx,
+	   comment_content AS commentContent,
+		use_yn AS userYn,
+        create_id AS feedIdx,
+        DATE_FORMAT(create_date, '%Y-%m-%d %H:%i:%s') AS createDate, 
+		update_id AS feedIdx, 
+		DATE_FORMAT(update_date, '%Y-%m-%d %H:%i:%s') AS updateDate 
+	from tb_comment
+	where feed_idx = #{feedIdx}
+	and use_yn ='Y' 
+	
+	</select>
 	
 </mapper>

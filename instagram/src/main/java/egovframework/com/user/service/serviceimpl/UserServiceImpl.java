@@ -106,8 +106,9 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 		return resultChk;
 	}
 
-	
-	public List<HashMap<String, Object>> selectUserFeedList(HashMap<String, Object> paramMap) {
+
+	@Override
+	public List<HashMap<String, Object>> selectUserList(HashMap<String, Object> paramMap) {
 	     List<HashMap<String, Object>> list = userDAO.selectUserList(paramMap);
 
 	      for (int i = 0; i < list.size(); i++) {
@@ -117,8 +118,8 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 	         List<HashMap<String, Object>> fileList = userDAO.selectFileList(feedIdx); // 파일 리스트 가져오기
 	         // 파일 리스트에 전체 경로 추가  
 	         for (HashMap<String, Object> fileMap : fileList) {
-	            String fileName = fileMap.get("saveFileName") != null ? fileMap.get("saveFileName").toString() : "";
-	            String fullPath = "C:\\ictsaeil\\insta\\" + fileName; 
+	            String saveFileName = fileMap.get("saveFileName") != null ? fileMap.get("saveFileName").toString() : "";
+	            String fullPath = "D:\\instagram\\insta\\" + saveFileName; 
 	            fileMap.put("fullPath", fullPath); 
 	         }
 	         feedMap.put("fileList", fileList);
@@ -129,21 +130,20 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 	      }
 
 	      return list;
-
-	   }
-
-	@Override
-	public List<HashMap<String, Object>> selectUserList(HashMap<String, Object> paramMap) {
-		// TODO Auto-generated method stub
-		return userDAO.selectUserList(paramMap);
 	}
 
+	@Override
+	public HashMap<String, Object> selectFeedDetail(int feedIdx) {
+		// TODO Auto-generated method stub
+		return userDAO.selectFeedDetail(feedIdx);
+	}
 
-//	@Override
-//	public int selectUserFeedListCnt(HashMap<String, Object> paramMap) {
-//		// TODO Auto-generated method stub
-//		return userDAO.selectUserFeedListCnt(paramMap);
-//	}
+	@Override
+	public List<HashMap<String, Object>> selectFileList(int feedIdx) {
+		// TODO Auto-generated method stub
+		return userDAO.selectFileList(feedIdx);
+	}
+
 	
 	
 

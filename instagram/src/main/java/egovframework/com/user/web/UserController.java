@@ -1,11 +1,16 @@
 package egovframework.com.user.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -157,6 +162,41 @@ public class UserController {
 		mv.setViewName("jsonView");
 		return mv;
 	}
+	
+
+	// 피드 수정(상세)
+		@RequestMapping("/main/getFeedDetail.do")
+		public ModelAndView getFeedDetail(@RequestParam(name = "feedIdx") int feedIdx) {
+			ModelAndView mv = new ModelAndView();
+			HashMap<String, Object> feedInfo = userService.selectFeedDetail(feedIdx);
+			List<HashMap<String, Object>> fileList = userService.selectFileList(feedIdx);
+			mv.addObject("fileList", fileList);
+			mv.addObject("feedInfo", feedInfo);
+			mv.setViewName("jsonView");
+			return mv;
+		}
+		
+		@RequestMapping("/main/feedImgView.do")
+		public void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			String path = "/instagram/insta/";
+			String saveFileName = request.getParameter("saveFileName").toString();
+
+			File imageFile = new File(path, saveFileName);
+
+			if (imageFile.exists()) {
+				response.setContentType("image/jpeg");
+				FileInputStream in = new FileInputStream(imageFile);
+				byte[] buffer = new byte[1024];
+				int bytesRead;
+				while ((bytesRead = in.read(buffer)) != -1) {
+					response.getOutputStream().write(buffer, 0, bytesRead);
+				}
+				in.close();
+			} else {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			}
+		}
+		
 	
 
 

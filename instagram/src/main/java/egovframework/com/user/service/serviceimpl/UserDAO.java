@@ -77,13 +77,13 @@ public class UserDAO extends EgovAbstractMapper{
 
 	public List<HashMap<String, Object>> selectFeedList(HashMap<String, Object> paramMap) {
 		// TODO Auto-generated method stub
-		return selectOne("selectFeedList", paramMap);
+		return selectList("selectFeedList", paramMap);
 	}
 
 
 	public List<HashMap<String, Object>> selectUserFeedList(int feedIdx) {
 		// TODO Auto-generated method stub
-		return selectOne("selectUserFeedList", feedIdx);
+		return selectList("selectUserFeedList", feedIdx);
 	}
 
 
@@ -95,13 +95,19 @@ public class UserDAO extends EgovAbstractMapper{
 
 	public List<HashMap<String, Object>> selectFileList(int feedIdx) {
 		// TODO Auto-generated method stub
-		return selectOne("selectAdminFeedList",feedIdx);
+		return selectList("selectFileList",feedIdx);
 	}
 
 
 	public List<HashMap<String, Object>> selectFeedComment(int feedIdx) {
 		// TODO Auto-generated method stub
-		return selectOne("selectFeedComment",feedIdx);
+		return selectList("selectFeedComment",feedIdx);
+	}
+
+
+	public HashMap<String, Object> selectFeedDetail(int feedIdx) {
+		// TODO Auto-generated method stub
+		return selectOne("selectFeedDetail", feedIdx);
 	}
 	
 

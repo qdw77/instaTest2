@@ -13,12 +13,12 @@
 			$("#btn_mypage").on('click', function(){
 				var frm = $("#logoutFrm");
 				frm.attr("method", "POST");
-				frm.attr("action", "/mypage.do")
+				frm.attr("action", "")
 				frm.submit();
 			});
 			
 			$("#btn_home").on('click', function(){
-				location.href = "/board/boardList.do";
+				location.href = "/feed/feeduser.do?userId";
 			});
 		});
 		

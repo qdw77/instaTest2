@@ -20,4 +20,8 @@ public interface UserService {
 //	public List<HashMap<String, Object>> selectUserFeedList(HashMap<String, Object> paramMap);
 
 	public List<HashMap<String, Object>> selectUserList(HashMap<String, Object> paramMap);
+
+	public HashMap<String, Object> selectFeedDetail(int feedIdx);
+
+	public List<HashMap<String, Object>> selectFileList(int feedIdx);
 }
