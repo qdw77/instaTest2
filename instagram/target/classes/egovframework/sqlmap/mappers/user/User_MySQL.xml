@@ -208,4 +208,20 @@
 	
 	</select>
 	
+	<select id="selectFeedDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	
+	SELECT 
+        feed_idx AS feedIdx,
+        feed_content AS feedContent,
+        feed_hashtag AS feedHashtag,
+        create_id AS userId,
+        create_date AS createDate,
+        update_id AS updateId,
+        update_date AS updateDate
+    FROM tb_feed
+    WHERE feed_idx = #{feedIdx}
+    AND use_yn = 'Y' 
+	
+	</select>
+	
 </mapper>

@@ -100,10 +100,7 @@
 			$("#"+fileNum).remove();
 			fileCnt--;
 		}    
-	    function fn_extFileDelete(fileNum){
-	    	deleteFeedFiles.push(fileNum);
-			$("#extFile_"+fileNum).remove();
-		}
+
 		
     
 		   function fn_feedinsert() {
@@ -127,6 +124,8 @@
 			        success: function(data, status, xhr) {
 			            if (data.resultChk > 0) { 
 			                alert("저장되었습니다."); 
+			                popupClose(uploadPopup); // 팝업 닫기
+			                fn_init();
 			                fn_selectList();
 			            } else {
 			                alert("저장에 실패하였습니다.");
@@ -172,25 +171,36 @@
 		                       for (var j = 0; j < data.list[i].fileList.length; j++) {
 		                          boardHtml += '<div class="carousel-item' + (j === 0 ? ' active' : '') + '">';
 		                          boardHtml += '<img src="/main/feedImgView.do?saveFileName=' + data.list[i].fileList[j].saveFileName + '" class="d-block w-100 feed-picture" alt="...">';
-		                          boardHtml += '<button class="option-btn" type="button" onclick="javascript:fn_moreOption(\''+data.list[i].feedIdx+'\');">'; 
+		                          /* boardHtml += '<button class="option-btn" type="button" onclick="javascript:fn_moreOption(\''+data.list[i].feedIdx+'\');">';  */
 		                          boardHtml += '</div>'; 
 		                       } 
 		                       
 		                       boardHtml += '</div>'; // carousel-inner
 
-		                       boardHtml += '<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching_'+i+'" data-bs-slide="prev">';
-		                       boardHtml += '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
-		                       boardHtml += '<span class="visually-hidden">Previous</span>';
-		                       boardHtml += '</button>';
-		                       boardHtml += '<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching_'+i+'" data-bs-slide="next">';
-		                       boardHtml += '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
-		                       boardHtml += '<span class="visually-hidden">Next</span>';
-		                       boardHtml += '</button>';
-		                       boardHtml += '</div>'; // carousel
-
+		                       if (data.list[i].fileList.length > 1) {
+		                           boardHtml += '<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching_'+i+'" data-bs-slide="prev">';
+		                           boardHtml += '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+		                           boardHtml += '<span class="visually-hidden">Previous</span>';
+		                           boardHtml += '</button>';
+		                           boardHtml += '<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching_'+i+'" data-bs-slide="next">';
+		                           boardHtml += '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+		                           boardHtml += '<span class="visually-hidden">Next</span>';
+		                           boardHtml += '</button>';
+		                        }    
+		                           boardHtml += '</div>'; // carousel
+		                           
 		                       boardHtml += '<div class="post-icons">';
 		                       boardHtml += '<div>';
-		                       boardHtml += '<span class="post-heart"><i class="fa-regular fa-heart" aria-hidden="true"></i></span>';
+		                       
+		                       if(data.list[i].likeYn == 'N') {
+		                           boardHtml += '<span class="post-heart" onclick="javascript:fn_feedLike(\''+data.list[i].feedIdx+'\',\'I\');">';
+		                           boardHtml += '<i class="fa-regular fa-heart" aria-hidden="true"></i>';
+		                           boardHtml += '</span>';
+		                       } else {
+		                           boardHtml += '<span class="post-heart active" style="color: tomato;" onclick="javascript:fn_feedLike(\''+data.list[i].feedIdx+'\',\'U\');">';
+		                           boardHtml += '<i class="fa-solid fa-heart" aria-hidden="true"></i>';
+		                           boardHtml += '</span>';
+		                       }
 		                       boardHtml += '<span><i class="fa-regular fa-comment" aria-hidden="true"></i></span>';
 		                       boardHtml += '</div>';
 		                       boardHtml += '<span><i class="fa-regular fa-bookmark" aria-hidden="true"></i></span>';
@@ -209,15 +219,30 @@
 		                       boardHtml += '</div>';
 
 		                       boardHtml += '<div class="comment-list">';
-
+		                       for (var k = 0; k < data.list[i].commentList.length; k++) {
+		                           boardHtml += '<div class="comment" id="comment_'+ data.list[i].commentList[k].commentIdx +'">';
+		                           boardHtml += '<div class="comment-detail">';
+		                           boardHtml += '<div class="username">' + data.list[i].commentList[k].createId + '</div>';
+		                           boardHtml += '<p style="margin-bottom: 0;">' + data.list[i].commentList[k].commentContent + '</p>';
+		                           boardHtml += '</div>';
+		                           boardHtml += '<div style="display: flex; align-items: center;">';
+		                         if (data.list[i].commentList[k].createId == "${loginInfo.userId}") {
+		                             boardHtml += '<a href="javascript:fn_commentDelete(\''+data.list[i].commentList[k].commentIdx+'\');" class="comment-delete">';
+		                             boardHtml += '삭제';
+		                             boardHtml += '</a>';
+		                         }
+		                           boardHtml += '<div class="commnet-heart"><i class="fa-regular fa-heart"></i></div>';
+		                           boardHtml += '</div>';
+		                           boardHtml += '</div>';
+		                       }
 		                       boardHtml += '</div>'; // comment-list
 
 		                       boardHtml += '<div class="timer">' + data.list[i].timeDiffer+' 전' + '</div>';
 
 		                       boardHtml += '<div class="comment-input">';
-		                       boardHtml += '<input type="text" placeholder="댓글달기..." id="commentContent_'+data.list[i].feedIdx+'">';  // ID 추가
+		                       boardHtml += '<input type="text" placeholder="댓글달기..." id="commentContent_'+data.list[i].feedIdx+'" name="commentContent_'+data.list[i].feedIdx+'">';  // ID 추가
 		                       boardHtml += '<button class="upload_btn" type="button" onclick="javascript:fn_comment('+data.list[i].feedIdx+');">게시</button>'; // 고유 ID 사용 
-							   boardHtml += '<button class="upload_btn" id="btn_upload" name="btn_upload" type="button">게시</button>';
+							   /* boardHtml += '<button class="upload_btn" id="btn_upload" name="btn_upload" type="button">게시</button>'; */
 		                       boardHtml += '</div>'; // comment-input
 
 		                       boardHtml += '</li>'; // post-item
@@ -258,21 +283,20 @@
 	   
 	   function fn_popupClose(){
 	      $(".more-option").removeClass("active");
+	      $(".upload-wrapper").removeClass("active"); // 팝업 닫기
+	      $("#text_field").empty(); // 파일 목록 초기화 (필요시)
 	   }
 	   
 	// 피드 상세보기
 		// 피드 상세보기
 		function fn_detail(feedIdx){
 			//  팝업 닫기 변수 
-		 var uploadPopup = document.querySelector('.upload-wrapper');
-				 uploadPopup.classList.add('active');
-				
-				 uploadPopup.classList.remove('active');
-			 
-		    $("#statusFlag").val("U");
+
+				 
+		    $("#feedFlag").val("U");
 		    $("#feedIdx").val(feedIdx);
 		  //var feedIdx3 = $("#feedIdx").val();
-			var formData = new FormData($("#saveFrm")[0]);
+			var frm = new FormData($("#post_form")[0]);
 			
 		
 			if ($("#feedFlag").val() === "U") {
@@ -293,9 +317,7 @@
 		      $.ajax({
 		         url : '/main/getFeedDetail.do',
 		         method : 'post',
-		         data : {
-		            "feedIdx" : feedIdx
-		         },
+		         data : { "feedIdx" : feedIdx },
 		         dataType : 'json',
 		         success : function(data, status, xhr) {
 		            $("#feedContent").val(data.feedInfo.feedContent);
@@ -325,6 +347,7 @@
 		            }
 		            $("#text_field").html(innerHtml);
 		            console.log(feedIdx);
+		           
 		         },
 		         error : function(data, status, err) {
 		            console.log(err);
@@ -381,8 +404,8 @@
 		       $(".new_upload_tit").show();
 		       $(".update_upload_tit").hide();
 		      
-		       $("#uploadFile").val("");
-		       $("#uploadFile").clear;
+		       $("#file-upload-btn").val("");
+		       $("#file-upload-btn").clear;
 		       $("#feedContent").val("");
 		       $("#feedHashtag").val("");
 		       $("#boardFileList").html("");
@@ -469,9 +492,9 @@
     <div class="recommend lg-only">
       <div class="side-user">
         <div class="profile-img side">
-          <!-- <a href="">
+         <a href="">
             <img src="/images/egovframework/assets/images/potato.jpeg" alt="프로필사진">
-          </a> -->
+          </a>
         </div>
 
         <div>
@@ -540,6 +563,12 @@
     </button>
 
     <div class="post-upload">
+    
+    <form id="fileFrm" name="fileFrm" method="POST">
+               <input type="hidden" id="fileName" name="fileName" value=""/>
+               <input type="hidden" id="filePath" name="filePath" value=""/>
+            </form>
+    
       <form  id="post_form" class="post_form" action="" >
       <input type="hidden" id="feedFlag" name="feedFlag" value="I"/>
       <input type="hidden" id="feedIdx" name="feedIdx"/>
@@ -556,7 +585,7 @@
         </div>
 
         <div class="post-file">
-          <input id="file-upload-btn" name="file-upload-btn" type="file"  required="required" multiple>
+          <input id="file-upload-btn" name="file-upload-btn" type="file"  class="text" required="required" multiple>
           <div id="text_field" name="text_field"></div>
         </div>
 

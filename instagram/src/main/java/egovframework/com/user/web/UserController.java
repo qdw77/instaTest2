@@ -151,9 +151,12 @@ public class UserController {
 	
 	// 게시물 리스트
 	@RequestMapping("/feed/selectAdminFeedList.do")
-	public ModelAndView selectAdminFeedList(@RequestParam HashMap<String, Object> paramMap) {
-		ModelAndView mv = new ModelAndView();
-		
+	public ModelAndView selectAdminFeedList(@RequestParam HashMap<String, Object> paramMap, HttpSession session) {
+	      ModelAndView mv = new ModelAndView();
+	      
+	      HashMap<String, Object> sessionInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+      paramMap.put("userId", sessionInfo.get("id").toString());
+
 		List<HashMap<String, Object>> list = userService.selectUserList(paramMap);
 		
 		
