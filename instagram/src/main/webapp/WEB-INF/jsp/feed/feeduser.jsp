@@ -18,7 +18,8 @@
     <script src="https://kit.fontawesome.com/522c2b7a73.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/egovframework/reset.css">
     <link rel="stylesheet" href="/css/egovframework/color.css">
-    <link rel="stylesheet" href="/css/egovframework/main/style.css">
+    <link rel="stylesheet" href="/css/egovframework/main/mainstyle.css">
+    <link rel="stylesheet" href="/css/egovframework/main/mainstyle.css">
     
     <!-- 부트스트랩 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -50,7 +51,29 @@
 	    	
 			$("#share-button").on("click", function() {
 			fn_feedinsert();
+
 		});
+			
+			
+			// 사용자 아이콘 클릭 시 이벤트
+			$(".user-icon").on("click", function() {
+			let profilePopup = document.getElementById('profilePopup');
+			let overlay = document.getElementById('overlay');
+
+			// 팝업과 오버레이 표시
+			profilePopup.style.display = 'block';
+			overlay.style.display = 'block';
+			});
+
+			 // 오버레이 클릭 시 팝업과 오버레이 닫기
+			$("#overlay").on("click", function() {
+			let profilePopup = document.getElementById('profilePopup');
+			let overlay = document.getElementById('overlay');
+
+			// 팝업과 오버레이 숨기기
+			profilePopup.style.display = 'none';
+			overlay.style.display = 'none';
+			});
 			
 			
 			
@@ -355,37 +378,6 @@
 		      });
 		   }
 
-			    	
-/* 		// 파일 목록
-		   function fn_filelist(feedIdx){
-		      $.ajax({
-		          url: '/main/getFileList.do',
-		          method: 'post',
-		          data : { "feedIdx" : feedIdx},
-		          dataType : 'json',
-		          success: function (data, status, xhr) {
-		             console.log(data.fileList);
-		            if(data.fileList.length > 0){
-		               for(var i=0; i<data.fileList.length; i++){
-		                  $("#text_field").append(
-		                        '<div id="file'+i+'" style="float:left;">'
-		                        +'<font style="font-size:12px">'
-		                        +'<a href="javascript:fn_imgView(\''+ data.fileList[i].saveFileName+'\', \'U\');">'
-		                        + data.fileList[i].originalFileName 
-		                        +'</a></font>'
-		                        +'<a href="javascript:fileDelete(\'file'+i+'\',\''+data.fileList[i].fileIdx+'\');">X</a>'
-		                        +'</div>'
-		                  );
-		               }
-		               fileNum = data.fileList.length;
-		            }
-		          },
-		          error: function (data, status, err) {
-		             console.log(err);
-		          }
-		      });
-		   } */
-		   
 		   // 피드 초기화
 		   function fn_init(){
 		      // canvas
@@ -465,6 +457,7 @@
         </a>
       </h1>
       <ul class="gnb-icon-list">
+      <li class="user-icon"> <i class="fa-solid fa-user"></i></li>
         <li class="post-upload-btn">
           <i class="fa-regular fa-square-plus"></i>
         </li>
@@ -605,6 +598,44 @@
   <div class="more-option" id="moreOption">
     
   </div>
+  
+  <!-- 오버레이 -->
+    <div id="overlay" class="overlay" style="display:none;"></div>
+
+    <!-- 팝업 영역 -->
+    <div id="profilePopup" class="profile-popup" style="display:none;">
+        <div class="popup-content">
+            <div class="img-area">
+                <div class="inner-area">
+                    <img src="/images/egovframework/assets/images/user.jpeg">
+                </div>
+            </div>
+            
+            <div class="name">
+            	${loginInfo.name}
+            </div>
+            
+            <div class="social-share">
+                <div class="row">
+                    <span>게시물</span>
+                </div>
+                <div class="row">
+                    <span>팔로워</span>
+                </div>
+                <div class="row">
+                    <span>팔로우</span>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button>.</button>
+                <button>로그아웃</button>
+                <button>회원탈퇴</button>
+            </div>
+            
+        </div>
+    </div>
+  
 </div>
 
 

@@ -12,7 +12,7 @@
    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/522c2b7a73.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/egovframework/reset.css">
-    <link rel="stylesheet" href="/css/egovframework/join/style.css">
+    <link rel="stylesheet" href="/css/egovframework/join/joinstyle.css">
     <link rel="stylesheet" href="/css/egovframework/color.css">
     <link rel="stylesheet" href="/css/egovframework/common.css">
     <script type="text/javascript">

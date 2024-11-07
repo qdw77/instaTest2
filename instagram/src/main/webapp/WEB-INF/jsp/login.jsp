@@ -16,10 +16,10 @@
       <link rel="stylesheet" href="/css/egovframework/reset.css">
   <link rel="stylesheet" href="/css/egovframework/color.css">
   <link rel="stylesheet" href="/css/egovframework/common.css">
-    <link rel="stylesheet" href="/css/egovframework/style.css" />  
+  <link rel="stylesheet" href="/css/egovframework/style.css"/>  
     <script type="text/javascript">
 	$(document).ready(function(){
-		$("#submit-btn").on('click', function(){
+		$("#submit").on('click', function(){
 			fn_login();
 		});
 	});
@@ -59,18 +59,14 @@
   </head>
   <body>
 	<form name="frm" id="frm">
-		    <div class="wrpper">
+		    <div class="wrapper">
 		      <div class="form-container">
 		        <div class="box login-box">
 		          <h1 class="logo">
-		            <a class="logo-light" href=""
-		              ><img src="/images/egovframework/assets/images/logo-light.png" alt="instagram light-logo"
-		            /></a>
-		            <a class="logo-dark" href=""
-		              ><img src="/images/egovframework/assets/images/logo-dark.png" alt="instagram dark-logo"
-		            /></a>
+		            <img class="logo-light" src="/images/egovframework/assets/images/logo-light.png" alt="instagram light-logo" />
+		             <img class="logo-dark" src="/images/egovframework/assets/images/logo-dark.png" alt="instagram dark-logo" />
 		          </h1>
-		       
+		       		
 		            <div class="animate-input">
 		              <input id="id"  name="id" type="text" >
 		              <span>전화번호 사용자 이름 또는 이메일</span>
@@ -82,7 +78,7 @@
 		              <button id="pw-visible" type="button">비밀번호 표시</button>
 		            </div>
 		
-		            <button id="submit-btn" class="btn-blue" type="button">로그인</button>
+		            <button id="submit" class="btn-blue" type="button">로그인</button>
 		
 		
 		          <div class="or-box">
@@ -92,11 +88,11 @@
 		          </div>
 		
 		          <div class="fb-btn">
-		            <a href="">
+		            
 		              <img
 		                src="/images/egovframework/assets/images/facebook-icon.png" alt="facebook-icon">
 		              <span>facebook으로 로그인</span>
-		            </a>
+		           
 		          </div>
 		
 		          <a class="forgot-pw" href="javascript:fn_findPwView();">비밀번호를 잊으셨나요?</a>
