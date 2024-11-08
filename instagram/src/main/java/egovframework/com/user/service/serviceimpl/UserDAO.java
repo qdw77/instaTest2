@@ -109,6 +109,13 @@ public class UserDAO extends EgovAbstractMapper{
 		// TODO Auto-generated method stub
 		return selectOne("selectFeedDetail", feedIdx);
 	}
+
+
+    // 피드 삭제 처리
+    public int deleteFeed(HashMap<String, Object> paramMap) {
+        // MyBatis의 'deleteFeed' SQL 쿼리 실행
+        return update("deleteFeed", paramMap);
+    }
 	
 
 }

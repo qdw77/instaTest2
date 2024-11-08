@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/css/egovframework/reset.css">
     <link rel="stylesheet" href="/css/egovframework/color.css">
     <link rel="stylesheet" href="/css/egovframework/main/mainstyle.css">
-    <link rel="stylesheet" href="/css/egovframework/main/mainstyle.css">
+    <link rel="stylesheet" href="/css/egovframework/main/mainplofile.css">
     
     <!-- 부트스트랩 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -113,6 +113,7 @@
 				fn_feedinsert();
 			});
 			
+	
 	 });
     
     
@@ -280,6 +281,33 @@
 		           }
 		       });
 		   }
+		   
+		   function fn_delete(feedIdx) {
+			    if (confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
+			        // 서버에 삭제 요청을 보냅니다.
+			        $.ajax({
+			            url: '/feed/deleteFeed.do', // 삭제 API URL
+			            method: 'POST',
+			            data: { feedIdx: feedIdx },
+			            success: function(response) {
+			                if (response.resultChk > 0) {
+			                    alert("게시물이 삭제되었습니다.");
+			                    fn_selectList(); // 게시물 목록 새로 고침
+
+			                    // 더보기 팝업 창 닫기
+			                    fn_popupClose();
+			                   
+			                } else {
+			                    alert("게시물 삭제에 실패했습니다.");
+			                }
+			            },
+			            error: function(xhr, status, error) {
+			                alert("삭제 요청 처리 중 오류가 발생했습니다.");
+			                console.log(error);
+			            }
+			        });
+			    }
+			}
 		   
 		   // 더보기
 		   function fn_moreOption(feedIdx){
@@ -563,7 +591,7 @@
             </form>
     
       <form  id="post_form" class="post_form" action="" >
-      <input type="hidden" id="feedFlag" name="feedFlag" value="I"/>
+      <input type="hidden" id="feedFlag" name="feedFlag"/>
       <input type="hidden" id="feedIdx" name="feedIdx"/>
         <p class="new_upload_tit">새 게시물 만들기</p>
         <p class="update_upload_tit" style="display:none;">게시물 수정하기</p>

@@ -1,5 +1,3 @@
-@charset "UTF-8";
-
 html, body {
     height: 100%; /* 전체 높이 설정 */
     margin: 0; /* 기본 여백 제거 */
@@ -98,4 +96,9 @@ html, body {
     width: 100%;
     margin-top: 30px;
     justify-content: space-between;
+}
+
+.row {
+    font-size: 17px;
+    cursor: pointer;
 }

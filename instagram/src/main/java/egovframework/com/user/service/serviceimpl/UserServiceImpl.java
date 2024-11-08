@@ -144,6 +144,13 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 		return userDAO.selectFileList(feedIdx);
 	}
 
+	@Override
+	public int deleteFeed(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userDAO.deleteFeed(paramMap);
+	}
+
+
 	
 	
 

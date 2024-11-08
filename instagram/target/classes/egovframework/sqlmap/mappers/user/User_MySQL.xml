@@ -224,4 +224,13 @@
 	
 	</select>
 	
+	
+	<update id="deleteFeed" parameterType="java.util.HashMap">
+	    UPDATE tb_feed
+	    SET use_yn = 'N',  <!-- 삭제된 피드는 'N'으로 표시 -->
+	        update_id = #{userId},  <!-- 업데이트한 사용자 ID -->
+	        update_date = CURRENT_TIMESTAMP(6)  <!-- 현재 시간으로 업데이트 -->
+	    WHERE feed_idx = #{feedIdx}  <!-- feedIdx를 기준으로 해당 피드 삭제 -->
+	</update>
+	
 </mapper>

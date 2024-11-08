@@ -24,4 +24,8 @@ public interface UserService {
 	public HashMap<String, Object> selectFeedDetail(int feedIdx);
 
 	public List<HashMap<String, Object>> selectFileList(int feedIdx);
+
+	public int deleteFeed(HashMap<String, Object> paramMap);
+
+	
 }

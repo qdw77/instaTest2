@@ -179,6 +179,28 @@ public class UserController {
 			return mv;
 		}
 		
+		
+		@RequestMapping("/feed/deleteFeed.do")
+		public ModelAndView deleteFeed(@RequestParam HashMap<String, Object> paramMap, HttpSession session) {
+		    ModelAndView mv = new ModelAndView();
+		    int resultChk = 0;
+
+		    // 세션에서 로그인 정보 가져오기
+		    HashMap<String, Object> sessionInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+		    if (sessionInfo != null) {
+		        // sessionInfo에서 userId 가져와 paramMap에 추가
+		        paramMap.put("userId", sessionInfo.get("id").toString());
+
+		        // 서비스에서 피드 삭제 수행
+		        resultChk = userService.deleteFeed(paramMap);
+		    }
+
+		    // 결과를 JSON 형태로 반환
+		    mv.addObject("resultChk", resultChk);
+		    mv.setViewName("jsonView");
+		    return mv;
+		}
+		
 		@RequestMapping("/main/feedImgView.do")
 		public void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			String path = "/instagram/insta/";
@@ -199,6 +221,7 @@ public class UserController {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
 		}
+		
 		
 	
 
